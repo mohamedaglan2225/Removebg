@@ -95,9 +95,11 @@ class RemoveBackgroundView: UIView {
                         if let image = image {
 //                            self.imageView.image = image
                             parentVC.dismiss(animated: true) {
-                                let vc = ImageResultView()
-                                vc.imageResult = image
-                                parentVC.present(vc, animated: true)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    let vc = ImageResultView()
+                                    vc.imageResult = image
+                                    parentVC.present(vc, animated: true)
+                                }
                             }
                         }else {
                             parentVC.dismiss(animated: true)
