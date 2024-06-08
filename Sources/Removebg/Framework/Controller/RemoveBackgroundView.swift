@@ -90,14 +90,15 @@ class RemoveBackgroundView: UIView {
                 self.uploadImage(image: image, url: url) { image in
                     if let image = image {
                         DispatchQueue.main.async {
-                            if let parentVC = self.parentViewController {
-                                let destinationViewController = ImageResultView()
-                                destinationViewController.imageResult = image
-                                destinationViewController.modalPresentationStyle = .fullScreen
-                                parentVC.present(destinationViewController, animated: true, completion: nil)
-                            }else {
-                                fatalError("Parent view controller not found")
-                            }
+                            self.imageView.image = image
+//                            if let parentVC = self.parentViewController {
+//                                let destinationViewController = ImageResultView()
+//                                destinationViewController.imageResult = image
+//                                destinationViewController.modalPresentationStyle = .fullScreen
+//                                parentVC.present(destinationViewController, animated: true, completion: nil)
+//                            }else {
+//                                fatalError("Parent view controller not found")
+//                            }
                         }
                     }
                 }
