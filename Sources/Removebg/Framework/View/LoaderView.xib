@@ -23,17 +23,17 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5gS-jE-2MT">
-                    <rect key="frame" x="43.5" y="317" width="327" height="262"/>
+                    <rect key="frame" x="43.5" y="291" width="327" height="314"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Component 4" translatesAutoresizingMaskIntoConstraints="NO" id="N7u-Ic-tI1">
-                            <rect key="frame" x="128.5" y="8" width="70" height="70"/>
+                            <rect key="frame" x="113.5" y="8" width="100" height="100"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="70" id="GZ7-fm-Jg9"/>
-                                <constraint firstAttribute="width" constant="70" id="by1-3v-dTf"/>
+                                <constraint firstAttribute="height" constant="100" id="GZ7-fm-Jg9"/>
+                                <constraint firstAttribute="width" constant="100" id="by1-3v-dTf"/>
                             </constraints>
                         </imageView>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="GCF-J9-FMR">
-                            <rect key="frame" x="16" y="94" width="295" height="144"/>
+                            <rect key="frame" x="16" y="124" width="295" height="144"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="Cwn-HN-LRg">
                                     <rect key="frame" x="0.0" y="0.0" width="295" height="90"/>
@@ -86,7 +86,7 @@
             <constraints>
                 <constraint firstItem="5gS-jE-2MT" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="8b3-RY-WBK"/>
                 <constraint firstItem="5gS-jE-2MT" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="0.789855" id="Jf1-st-5gz"/>
-                <constraint firstItem="5gS-jE-2MT" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" multiplier="0.292411" id="Q0a-nX-0ad"/>
+                <constraint firstItem="5gS-jE-2MT" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" multiplier="0.35" id="Q0a-nX-0ad"/>
                 <constraint firstItem="5gS-jE-2MT" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="tyP-Tq-pHQ"/>
             </constraints>
             <point key="canvasLocation" x="121.73913043478262" y="20.758928571428569"/>

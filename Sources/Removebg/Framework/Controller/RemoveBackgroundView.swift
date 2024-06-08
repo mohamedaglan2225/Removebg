@@ -84,7 +84,7 @@ class RemoveBackgroundView: UIView {
     
     
     @objc private func removeBackGroundAction() {
-        guard let image = imageView.image, let url = URL(string: "https://removebg.gyoom.sa") else { return }
+        guard let image = imageView.image?.fixedOrientation(), let url = URL(string: "https://removebg.gyoom.sa") else { return }
         if let parentVC = self.parentViewController {
             let loaderView = LoaderView()
             loaderView.modalPresentationStyle = .overFullScreen
@@ -184,3 +184,19 @@ extension RemoveBackgroundView: URLSessionTaskDelegate {
 }
 
 
+
+
+extension UIImage {
+    func fixedOrientation() -> UIImage? {
+        guard imageOrientation != .up else {
+            return self // The image is already correctly oriented.
+        }
+
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        draw(in: CGRect(origin: .zero, size: size))
+        let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return normalizedImage
+    }
+}
