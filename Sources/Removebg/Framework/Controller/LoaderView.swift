@@ -33,7 +33,7 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
     //MARK: - LifeCycle Events -
     public override func viewDidLoad() {
         super.viewDidLoad()
-        loadGIF(imageView: loaderImage, gifName: "Loader")
+        loadGIF(imageView: loaderImage, resourceName: "Loader")
         loaderProgressBar.progress = 0.0
         loaderPercentage.text = "0%"
     }
@@ -59,12 +59,11 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
     
     
     //MARK: - IBActions -
-    func loadGIF(imageView: UIImageView, gifName: String) {
-        // Ensure the GIF file is available in the main bundle
-        guard let path = Bundle.main.path(forResource: gifName, ofType: "gif"),
-              let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
+    func loadGIF(imageView: UIImageView, resourceName: String) {
+        guard let url = Bundle.module.url(forResource: resourceName, withExtension: "gif"),
+              let data = try? Data(contentsOf: url),
               let source = CGImageSourceCreateWithData(data as CFData, nil) else {
-            print("Could not find GIF")
+            print("Failed to load GIF from module resources.")
             return
         }
 
@@ -73,20 +72,17 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
 
         let frameCount = CGImageSourceGetCount(source)
         
-        // Extract each frame and its duration
         for i in 0..<frameCount {
             if let cgImage = CGImageSourceCreateImageAtIndex(source, i, nil) {
-                let image = UIImage(cgImage: cgImage)
-                images.append(image)
-                
-                let frameProperties = CGImageSourceCopyPropertiesAtIndex(source, i, nil) as? [String: Any]
-                let gifProperties = frameProperties?[kCGImagePropertyGIFDictionary as String] as? [String: Any]
-                let delayTime = gifProperties?[kCGImagePropertyGIFDelayTime as String] as? Double ?? 0.1 // Default frame duration
+                let frameProperties = CGImageSourceCopyPropertiesAtIndex(source, i, nil) as Dictionary?
+                let gifProperties = (frameProperties as NSDictionary?)?[kCGImagePropertyGIFDictionary] as? NSDictionary
+                let delayTime = gifProperties?[kCGImagePropertyGIFDelayTime as NSString] as? Double ?? 0.1 // Default duration if not specified
+
                 totalDuration += delayTime
+                images.append(UIImage(cgImage: cgImage))
             }
         }
 
-        // Set the images and duration for the animation
         imageView.animationImages = images
         imageView.animationDuration = totalDuration
         imageView.startAnimating()
