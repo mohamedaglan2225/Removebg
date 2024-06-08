@@ -84,37 +84,13 @@ class RemoveBackgroundView: UIView {
     
     
     @objc private func removeBackGroundAction() {
-        // Assuming 'uploadImage' is a method within the same class or accessible scope
-//        if let image = imageView.image {
-//            if let url = URL(string: "https://removebg.gyoom.sa") {
-//                if let parentVC = self.parentViewController {
-//                    let destinationViewController = LoaderView()
-//                    destinationViewController.modalPresentationStyle = .overFullScreen
-//                    parentVC.present(destinationViewController, animated: true, completion: nil)
-//                    
-//                    self.uploadImage(image: image, url: url, delegate: destinationViewController) { image in
-//                        if let image = image {
-//                            DispatchQueue.main.async {
-//                               
-//                            }
-//                        }
-//                    }
-//                }else {
-//                    fatalError("Parent view controller not found")
-//                }
-//                
-//            }
-//        }
-        
         guard let image = imageView.image, let url = URL(string: "https://removebg.gyoom.sa") else { return }
-        
         if let parentVC = self.parentViewController {
             let loaderView = LoaderView()
             loaderView.modalPresentationStyle = .overFullScreen
             parentVC.present(loaderView, animated: true) {
                 self.uploadDelegate = loaderView
                 self.uploadImage(image: image, url: url, delegate: loaderView) { image in
-                    
                     DispatchQueue.main.async {
                         if let image = image {
                             self.imageView.image = image

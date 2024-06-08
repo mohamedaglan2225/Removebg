@@ -15,6 +15,7 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
     
     
     //MARK: - IBOutLets -
+    @IBOutlet weak var loaderImage: UIImageView!
     @IBOutlet weak var loaderPercentage: UILabel!
     @IBOutlet weak var loaderProgressBar: UIProgressView!
     
@@ -24,13 +25,14 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
     
     //MARK: - Properties -
     var delegate: UploadProgressDelegate?
-    
+    let loader = LoaderGif()
     
     
     
     //MARK: - LifeCycle Events -
     public override func viewDidLoad() {
         super.viewDidLoad()
+        loader.loadGIF(imageView: loaderImage, gifName: "Loader")
         loaderProgressBar.progress = 0.0
         loaderPercentage.text = "0%"
     }
