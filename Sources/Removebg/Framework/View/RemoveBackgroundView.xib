@@ -12,6 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RemoveBackgroundView" customModuleProvider="target">
             <connections>
+                <outlet property="deleteImage" destination="Uwx-Uq-l3x" id="KHq-iD-yex"/>
                 <outlet property="imageView" destination="6wJ-A0-PkS" id="VM7-1c-fOx"/>
                 <outlet property="removeBackGroundView" destination="fLH-oU-PE6" id="U5w-OJ-ztt"/>
             </connections>
@@ -71,7 +72,7 @@
                     </subviews>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uwx-Uq-l3x">
-                    <rect key="frame" x="16" y="219" width="40" height="40"/>
+                    <rect key="frame" x="32" y="235" width="40" height="40"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     <state key="normal" image="cancel"/>
                     <connections>
@@ -120,7 +121,7 @@
             <constraints>
                 <constraint firstItem="r5x-pn-Ufe" firstAttribute="top" secondItem="UVY-mV-7hN" secondAttribute="bottom" constant="16" id="1Rm-oy-9QM"/>
                 <constraint firstItem="2hu-N0-sQ0" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="16" id="82i-mA-FsG"/>
-                <constraint firstItem="Uwx-Uq-l3x" firstAttribute="top" secondItem="6wJ-A0-PkS" secondAttribute="top" id="9LP-8Z-iSk"/>
+                <constraint firstItem="Uwx-Uq-l3x" firstAttribute="top" secondItem="6wJ-A0-PkS" secondAttribute="top" constant="16" id="9LP-8Z-iSk"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="fLH-oU-PE6" secondAttribute="trailing" constant="16" id="Kdq-lj-dvD"/>
                 <constraint firstItem="2hu-N0-sQ0" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="P5C-iX-gRS"/>
                 <constraint firstItem="r5x-pn-Ufe" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="QWN-Uj-l0g"/>
@@ -136,7 +137,7 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="UVY-mV-7hN" secondAttribute="trailing" id="jTx-yZ-JCy"/>
                 <constraint firstItem="kGe-Hg-T9n" firstAttribute="top" secondItem="2hu-N0-sQ0" secondAttribute="top" id="mOd-G1-wnJ"/>
                 <constraint firstItem="GOb-Ei-lDk" firstAttribute="top" secondItem="r5x-pn-Ufe" secondAttribute="bottom" constant="16" id="vTZ-Kd-pYj"/>
-                <constraint firstItem="Uwx-Uq-l3x" firstAttribute="leading" secondItem="6wJ-A0-PkS" secondAttribute="leading" id="xzg-KI-oT8"/>
+                <constraint firstItem="Uwx-Uq-l3x" firstAttribute="leading" secondItem="6wJ-A0-PkS" secondAttribute="leading" constant="16" id="xzg-KI-oT8"/>
                 <constraint firstItem="fLH-oU-PE6" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="zu5-kr-xZe"/>
             </constraints>
             <point key="canvasLocation" x="10.144927536231885" y="19.419642857142858"/>
