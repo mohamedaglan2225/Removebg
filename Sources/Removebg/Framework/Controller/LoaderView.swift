@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ImageIO
 
 protocol UploadProgressDelegate: AnyObject {
     func didUpdateProgress(percentage: Float)
@@ -32,7 +33,7 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
     //MARK: - LifeCycle Events -
     public override func viewDidLoad() {
         super.viewDidLoad()
-        loader.loadGIF(imageView: loaderImage, gifName: "Loader")
+        loadGIF(imageView: loaderImage, gifName: "Loader")
         loaderProgressBar.progress = 0.0
         loaderPercentage.text = "0%"
     }
@@ -58,7 +59,39 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
     
     
     //MARK: - IBActions -
-    
+    func loadGIF(imageView: UIImageView, gifName: String) {
+        // Ensure the GIF file is available in the main bundle
+        guard let path = Bundle.main.path(forResource: gifName, ofType: "gif"),
+              let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
+              let source = CGImageSourceCreateWithData(data as CFData, nil) else {
+            print("Could not find GIF")
+            return
+        }
+
+        var images = [UIImage]()
+        var totalDuration: TimeInterval = 0
+
+        let frameCount = CGImageSourceGetCount(source)
+        
+        // Extract each frame and its duration
+        for i in 0..<frameCount {
+            if let cgImage = CGImageSourceCreateImageAtIndex(source, i, nil) {
+                let image = UIImage(cgImage: cgImage)
+                images.append(image)
+                
+                let frameProperties = CGImageSourceCopyPropertiesAtIndex(source, i, nil) as? [String: Any]
+                let gifProperties = frameProperties?[kCGImagePropertyGIFDictionary as String] as? [String: Any]
+                let delayTime = gifProperties?[kCGImagePropertyGIFDelayTime as String] as? Double ?? 0.1 // Default frame duration
+                totalDuration += delayTime
+            }
+        }
+
+        // Set the images and duration for the animation
+        imageView.animationImages = images
+        imageView.animationDuration = totalDuration
+        imageView.startAnimating()
+    }
+
 
     
 }
