@@ -127,7 +127,7 @@ extension RemoveBackgroundView: UIImagePickerControllerDelegate, UINavigationCon
 
 
 //MARK: - Networking -
-extension RemoveBackgroundView {
+extension RemoveBackgroundView: URLSessionTaskDelegate {
     
     func uploadImage(image: UIImage, url: URL, completion: @escaping (UIImage?) -> Void) {
         // 1. Create the URLRequest
@@ -141,28 +141,38 @@ extension RemoveBackgroundView {
         var body = Data()
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
         body.append("Content-Disposition: form-data; name=\"image_file\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
-        body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        body.append("Content-Type: image/jpeg\r\n\rn".data(using: .utf8)!)
         body.append(imageData)
         body.append("\r\n".data(using: .utf8)!)
         body.append("--\(boundary)--\r\n".data(using: .utf8)!)
 
-        request.httpBody = body
+        // 3. Configure URLSession with delegate
+        let config = URLSessionConfiguration.default
+        let session = URLSession(configuration: config, delegate: self, delegateQueue: OperationQueue.main)
 
-        // 3. Configure URLSession
-        let session = URLSession.shared
-        session.dataTask(with: request) { data, response, error in
+        // 4. Create upload task
+        let task = session.uploadTask(with: request, from: body) { data, response, error in
             guard let data = data, error == nil else {
                 completion(nil)
                 return
             }
-            // 4. Handle the Response
             let receivedImage = UIImage(data: data)
-
-            // 5. Set Image to UIImageView
             DispatchQueue.main.async {
                 completion(receivedImage)
             }
-        }.resume()
+        }
+
+        // 5. Track progress
+        task.resume()
+        task.progress.addObserver(self, forKeyPath: #keyPath(Progress.fractionCompleted), options: .new, context: nil)
     }
+
+    // Implement the observer method
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == #keyPath(Progress.fractionCompleted), let progress = object as? Progress {
+            print("Upload Progress: \(progress.fractionCompleted * 100)%")
+        }
+    }
+
     
 }
