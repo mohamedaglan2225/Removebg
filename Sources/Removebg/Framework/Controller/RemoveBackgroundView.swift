@@ -22,7 +22,7 @@ class RemoveBackgroundView: UIView {
     
     
     //MARK: - Properties -
-    
+    weak var uploadDelegate: UploadProgressDelegate?
     
     
     
@@ -85,21 +85,37 @@ class RemoveBackgroundView: UIView {
     
     @objc private func removeBackGroundAction() {
         // Assuming 'uploadImage' is a method within the same class or accessible scope
-        if let image = imageView.image {
-            if let url = URL(string: "https://removebg.gyoom.sa") {
-                self.uploadImage(image: image, url: url) { image in
-                    if let image = image {
-                        DispatchQueue.main.async {
-                            self.imageView.image = image
-//                            if let parentVC = self.parentViewController {
-//                                let destinationViewController = ImageResultView()
-//                                destinationViewController.imageResult = image
-//                                destinationViewController.modalPresentationStyle = .fullScreen
-//                                parentVC.present(destinationViewController, animated: true, completion: nil)
-//                            }else {
-//                                fatalError("Parent view controller not found")
+//        if let image = imageView.image {
+//            if let url = URL(string: "https://removebg.gyoom.sa") {
+//                if let parentVC = self.parentViewController {
+//                    let destinationViewController = LoaderView()
+//                    destinationViewController.modalPresentationStyle = .overFullScreen
+//                    parentVC.present(destinationViewController, animated: true, completion: nil)
+//                    
+//                    self.uploadImage(image: image, url: url, delegate: destinationViewController) { image in
+//                        if let image = image {
+//                            DispatchQueue.main.async {
+//                               
 //                            }
-                        }
+//                        }
+//                    }
+//                }else {
+//                    fatalError("Parent view controller not found")
+//                }
+//                
+//            }
+//        }
+        
+        guard let image = imageView.image, let url = URL(string: "https://removebg.gyoom.sa") else { return }
+        let loaderView = LoaderView()
+        if let parentVC = self.parentViewController {
+            //            let destinationViewController = LoaderView()
+            loaderView.modalPresentationStyle = .overFullScreen
+            parentVC.present(loaderView, animated: true, completion: nil)
+            self.uploadImage(image: image, url: url, delegate: loaderView) { image in
+                if let image = image {
+                    DispatchQueue.main.async {
+                        self.imageView.image = image
                     }
                 }
             }
@@ -129,50 +145,62 @@ extension RemoveBackgroundView: UIImagePickerControllerDelegate, UINavigationCon
 //MARK: - Networking -
 extension RemoveBackgroundView: URLSessionTaskDelegate {
     
-    func uploadImage(image: UIImage, url: URL, completion: @escaping (UIImage?) -> Void) {
-        // 1. Create the URLRequest
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        let boundary = "Boundary-\(UUID().uuidString)"
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+    // MARK: - Upload Image Function
+    func uploadImage(image: UIImage, url: URL, delegate: UploadProgressDelegate, completion: @escaping (UIImage?) -> Void) {
+           var request = URLRequest(url: url)
+           request.httpMethod = "POST"
+           let boundary = "Boundary-\(UUID().uuidString)"
+           request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+           
+           let imageData = image.jpegData(compressionQuality: 0.5)!
+           var body = Data()
+           body.append("--\(boundary)\r\n".data(using: .utf8)!)
+           body.append("Content-Disposition: form-data; name=\"image_file\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
+           body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+           body.append(imageData)
+           body.append("\r\n".data(using: .utf8)!)
+           body.append("--\(boundary)--\r\n".data(using: .utf8)!)
 
-        // 2. Create Multipart FormData
-        let imageData = image.jpegData(compressionQuality: 0.5)!
-        var body = Data()
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"image_file\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
-        body.append("Content-Type: image/jpeg\r\n\rn".data(using: .utf8)!)
-        body.append(imageData)
-        body.append("\r\n".data(using: .utf8)!)
-        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-
-        // 3. Configure URLSession with delegate
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config, delegate: self, delegateQueue: OperationQueue.main)
-
-        // 4. Create upload task
+           let config = URLSessionConfiguration.default
+           let session = URLSession(configuration: config, delegate: self, delegateQueue: OperationQueue.main)
+           
         let task = session.uploadTask(with: request, from: body) { data, response, error in
-            guard let data = data, error == nil else {
-                completion(nil)
-                return
-            }
-            let receivedImage = UIImage(data: data)
-            DispatchQueue.main.async {
-                completion(receivedImage)
-            }
+            if let error = error {
+                       print("Error occurred: \(error)")
+                       DispatchQueue.main.async {
+                           completion(nil)
+                       }
+                       return
+                   }
+                   if let data = data, let image = UIImage(data: data) {
+                       DispatchQueue.main.async {
+                           completion(image)
+                       }
+                   } else {
+                       DispatchQueue.main.async {
+                           completion(nil)
+                       }
+                   }
+//            let receivedImage = UIImage(data: data)
+//            DispatchQueue.main.async {
+//                completion(receivedImage)
+//            }
         }
-
-        // 5. Track progress
         task.resume()
-        task.progress.addObserver(self, forKeyPath: #keyPath(Progress.fractionCompleted), options: .new, context: nil)
+        
+        // Add observer to the task's progress
+        task.progress.addObserver(self, forKeyPath: "fractionCompleted", options: [.new], context: nil)
     }
-
-    // Implement the observer method
+    
+    // MARK: - KVO Handling
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == #keyPath(Progress.fractionCompleted), let progress = object as? Progress {
-            print("Upload Progress: \(progress.fractionCompleted * 100)%")
+        if keyPath == "fractionCompleted", let progress = object as? Progress, let newProgress = change?[.newKey] as? Double {
+            DispatchQueue.main.async {
+                self.uploadDelegate?.didUpdateProgress(percentage: Float(newProgress))
+            }
         }
     }
-
     
 }
+
+

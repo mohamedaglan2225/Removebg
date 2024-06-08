@@ -20,7 +20,8 @@ let package = Package(
         .target(
             name: "Removebg",
             resources: [.copy("Framework/View/RemoveBackgroundView.xib"),
-                        .copy("Framework/View/ImageResultView.xib")
+                        .copy("Framework/View/ImageResultView.xib"),
+                        .copy("Framework/View/LoaderView.xib")
         ]),
         .testTarget(
             name: "RemovebgTests",
