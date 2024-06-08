@@ -36,6 +36,13 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
 
     
     
+    public init() {
+        super.init(nibName: "LoaderView", bundle: Bundle.module)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     
     //MARK: - Configure UI -
