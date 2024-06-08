@@ -22,7 +22,7 @@ let package = Package(
             resources: [.copy("Framework/View/RemoveBackgroundView.xib"),
                         .copy("Framework/View/ImageResultView.xib"),
                         .copy("Framework/View/LoaderView.xib"),
-                        .process("Resources/Loader.gif")
+                        .process("Assets/Loader.gif")
         ]),
         .testTarget(
             name: "RemovebgTests",
