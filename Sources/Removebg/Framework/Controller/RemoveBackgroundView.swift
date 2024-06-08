@@ -93,8 +93,12 @@ class RemoveBackgroundView: UIView {
                 self.uploadImage(image: image, url: url, delegate: loaderView) { image in
                     DispatchQueue.main.async {
                         if let image = image {
-                            self.imageView.image = image
-                            parentVC.dismiss(animated: true)
+//                            self.imageView.image = image
+                            parentVC.dismiss(animated: true) {
+                                let vc = ImageResultView()
+                                vc.imageResult = image
+                                parentVC.present(vc, animated: true)
+                            }
                         }else {
                             parentVC.dismiss(animated: true)
                         }
@@ -181,22 +185,4 @@ extension RemoveBackgroundView: URLSessionTaskDelegate {
     }
 
     
-}
-
-
-
-
-extension UIImage {
-    func fixedOrientation() -> UIImage? {
-        guard imageOrientation != .up else {
-            return self // The image is already correctly oriented.
-        }
-
-        UIGraphicsBeginImageContextWithOptions(size, false, scale)
-        draw(in: CGRect(origin: .zero, size: size))
-        let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-
-        return normalizedImage
-    }
 }
