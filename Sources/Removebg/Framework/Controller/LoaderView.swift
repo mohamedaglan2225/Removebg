@@ -31,9 +31,10 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
     //MARK: - LifeCycle Events -
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
+        loaderProgressBar.progress = 0.0
+        loaderPercentage.text = "0%"
     }
-
+    
     
     
     public init() {
@@ -46,17 +47,12 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
     
     
     //MARK: - Configure UI -
-    func updateProgress(percentage: Float) {
-        loaderProgressBar.progress = percentage
-        loaderPercentage.text = "\(Int(percentage * 100))%"
-    }
-    
-    
     func didUpdateProgress(percentage: Float) {
-        DispatchQueue.main.async {
-            self.updateProgress(percentage: percentage)
-        }
-    }
+           DispatchQueue.main.async {
+               self.loaderProgressBar.progress = percentage
+               self.loaderPercentage.text = "\(Int(percentage * 100))%"
+           }
+       }
     
     
     //MARK: - IBActions -

@@ -109,13 +109,13 @@ class RemoveBackgroundView: UIView {
         guard let image = imageView.image, let url = URL(string: "https://removebg.gyoom.sa") else { return }
         let loaderView = LoaderView()
         if let parentVC = self.parentViewController {
-            //            let destinationViewController = LoaderView()
             loaderView.modalPresentationStyle = .overFullScreen
-            parentVC.present(loaderView, animated: true, completion: nil)
-            self.uploadImage(image: image, url: url, delegate: loaderView) { image in
-                if let image = image {
-                    DispatchQueue.main.async {
-                        self.imageView.image = image
+            parentVC.present(loaderView, animated: true) {
+                self.uploadImage(image: image, url: url, delegate: loaderView) { image in
+                    if let image = image {
+                        DispatchQueue.main.async {
+                            self.imageView.image = image
+                        }
                     }
                 }
             }
