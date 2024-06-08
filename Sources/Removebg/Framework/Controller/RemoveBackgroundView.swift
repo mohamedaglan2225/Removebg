@@ -107,14 +107,20 @@ class RemoveBackgroundView: UIView {
 //        }
         
         guard let image = imageView.image, let url = URL(string: "https://removebg.gyoom.sa") else { return }
-        let loaderView = LoaderView()
+        
         if let parentVC = self.parentViewController {
+            let loaderView = LoaderView()
             loaderView.modalPresentationStyle = .overFullScreen
             parentVC.present(loaderView, animated: true) {
+                self.uploadDelegate = loaderView
                 self.uploadImage(image: image, url: url, delegate: loaderView) { image in
-                    if let image = image {
-                        DispatchQueue.main.async {
+                    
+                    DispatchQueue.main.async {
+                        if let image = image {
                             self.imageView.image = image
+                            parentVC.dismiss(animated: true)
+                        }else {
+                            parentVC.dismiss(animated: true)
                         }
                     }
                 }
@@ -160,31 +166,27 @@ extension RemoveBackgroundView: URLSessionTaskDelegate {
            body.append(imageData)
            body.append("\r\n".data(using: .utf8)!)
            body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-
-           let config = URLSessionConfiguration.default
-           let session = URLSession(configuration: config, delegate: self, delegateQueue: OperationQueue.main)
-           
+        
+        let config = URLSessionConfiguration.default
+        let session = URLSession(configuration: config, delegate: self, delegateQueue: OperationQueue.main)
+        
         let task = session.uploadTask(with: request, from: body) { data, response, error in
             if let error = error {
-                       print("Error occurred: \(error)")
-                       DispatchQueue.main.async {
-                           completion(nil)
-                       }
-                       return
-                   }
-                   if let data = data, let image = UIImage(data: data) {
-                       DispatchQueue.main.async {
-                           completion(image)
-                       }
-                   } else {
-                       DispatchQueue.main.async {
-                           completion(nil)
-                       }
-                   }
-//            let receivedImage = UIImage(data: data)
-//            DispatchQueue.main.async {
-//                completion(receivedImage)
-//            }
+                print("Error occurred: \(error)")
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
+                return
+            }
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    completion(image)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
+            }
         }
         task.resume()
         
@@ -194,9 +196,10 @@ extension RemoveBackgroundView: URLSessionTaskDelegate {
     
     // MARK: - KVO Handling
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "fractionCompleted", let progress = object as? Progress, let newProgress = change?[.newKey] as? Double {
+        if keyPath == "fractionCompleted", let progress = object as? Progress {
+            let percentage = Float(progress.fractionCompleted)
             DispatchQueue.main.async {
-                self.uploadDelegate?.didUpdateProgress(percentage: Float(newProgress))
+                self.uploadDelegate?.didUpdateProgress(percentage: percentage)
             }
         }
     }
