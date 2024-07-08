@@ -119,7 +119,16 @@ class RemoveBackgroundView: UIView {
     
     @objc private func removeBackgroundAction() {
         guard let image = imageView.image?.fixedOrientation(), let url = URL(string: "https://removebg.gyoom.sa") else { return }
-        viewModel.uploadImage(image: image, url: url)
+        //        viewModel.uploadImage(image: image, url: url)
+        if let parentVC = self.parentViewController {
+            let loaderViewModel = LoaderViewModel()
+            let loaderView = LoaderView(viewModel: loaderViewModel)
+            loaderView.modalPresentationStyle = .overFullScreen
+            parentVC.present(loaderView, animated: true) {
+                self.uploadDelegate = loaderView
+                self.viewModel.uploadImage(image: image, url: url)
+            }
+        }
     }
     
     private func presentImageResultView(with image: UIImage) {
