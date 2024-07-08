@@ -95,6 +95,18 @@ class RemoveBackgroundView: UIView {
                 self?.uploadDelegate?.didUpdateProgress(percentage: progress)
             }
             .store(in: &cancellables)
+        
+        viewModel.$isProcessingComplete
+            .receive(on: RunLoop.main)
+            .sink { [weak self] isComplete in
+                if isComplete {
+                    self?.dismissLoaderView()
+                    if let image = self?.viewModel.processedImage {
+                        self?.presentImageResultView(with: image)
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
     
     
@@ -138,16 +150,19 @@ class RemoveBackgroundView: UIView {
         parentVC.present(vc, animated: true)
     }
     
+    private func dismissLoaderView() {
+        parentViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+    }
 }
 
 
 extension RemoveBackgroundView: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        picker.dismiss(animated: true) {
-            if let image = info[.originalImage] as? UIImage {
-                self.viewModel.selectedImage = image
+            picker.dismiss(animated: true) {
+                if let image = info[.originalImage] as? UIImage {
+                    self.viewModel.selectedImage = image
+                }
             }
         }
-    }
 }

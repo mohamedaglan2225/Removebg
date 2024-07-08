@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Mohamed Aglan on 7/8/24.
 //
@@ -14,7 +14,8 @@ class RemoveBackgroundViewModel: NSObject, ObservableObject {
     @Published var selectedImage: UIImage?
     @Published var processedImage: UIImage?
     @Published var uploadProgress: Float = 0.0
-
+    @Published var isProcessingComplete: Bool = false
+    
     private var cancellables: Set<AnyCancellable> = []
     
     func uploadImage(image: UIImage, url: URL) {
@@ -43,6 +44,11 @@ class RemoveBackgroundViewModel: NSObject, ObservableObject {
             if let data = data, let image = UIImage(data: data) {
                 DispatchQueue.main.async {
                     self.processedImage = image
+                    self.isProcessingComplete = true
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.isProcessingComplete = true
                 }
             }
         }
