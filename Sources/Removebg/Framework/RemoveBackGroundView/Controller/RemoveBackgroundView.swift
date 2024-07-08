@@ -36,7 +36,11 @@ class RemoveBackgroundView: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented. Use init(frame:viewModel:) instead.")
+        self.viewModel = RemoveBackgroundViewModel()
+        super.init(coder: aDecoder)
+        commonInit()
+        configureUI()
+        bindViewModel()
     }
     
     
@@ -47,6 +51,7 @@ class RemoveBackgroundView: UIView {
         configureUI()
         bindViewModel()
     }
+    
     
     private func commonInit() {
         let nib = UINib(nibName: "RemoveBackgroundView", bundle: Bundle.module)
