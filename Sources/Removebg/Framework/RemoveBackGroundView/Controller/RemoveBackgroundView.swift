@@ -19,7 +19,7 @@ class RemoveBackgroundView: UIView {
     
     
     // MARK: - Properties -
-    private var cancellable: Set<AnyCancellable> = []
+    private var cancellables: Set<AnyCancellable> = []
     private var viewModel: RemoveBackgroundViewModel
     weak var uploadDelegate: UploadProgressDelegate?
     
@@ -43,7 +43,6 @@ class RemoveBackgroundView: UIView {
         bindViewModel()
     }
     
-    
     init(viewModel: RemoveBackgroundViewModel) {
         self.viewModel = viewModel
         super.init(frame: .zero)
@@ -51,7 +50,6 @@ class RemoveBackgroundView: UIView {
         configureUI()
         bindViewModel()
     }
-    
     
     private func commonInit() {
         let nib = UINib(nibName: "RemoveBackgroundView", bundle: Bundle.module)
@@ -81,7 +79,7 @@ class RemoveBackgroundView: UIView {
                 self?.deleteImage.isHidden = image == nil
                 self?.removeBackGroundView.isUserInteractionEnabled = image != nil
             }
-            .store(in: &cancellable)
+            .store(in: &cancellables)
         
         viewModel.$processedImage
             .receive(on: RunLoop.main)
@@ -89,14 +87,14 @@ class RemoveBackgroundView: UIView {
                 guard let self = self, let image = image else { return }
                 self.presentImageResultView(with: image)
             }
-            .store(in: &cancellable)
+            .store(in: &cancellables)
         
         viewModel.$uploadProgress
             .receive(on: RunLoop.main)
             .sink { [weak self] progress in
                 self?.uploadDelegate?.didUpdateProgress(percentage: progress)
             }
-            .store(in: &cancellable)
+            .store(in: &cancellables)
     }
     
     

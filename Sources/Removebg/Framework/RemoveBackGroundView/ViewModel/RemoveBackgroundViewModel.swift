@@ -9,13 +9,13 @@ import Foundation
 import Combine
 import UIKit
 
-class RemoveBackgroundViewModel {
+class RemoveBackgroundViewModel: NSObject, ObservableObject {
     // Define publishers
     @Published var selectedImage: UIImage?
     @Published var processedImage: UIImage?
     @Published var uploadProgress: Float = 0.0
 
-    private var cancellable: Set<AnyCancellable> = []
+    private var cancellables: Set<AnyCancellable> = []
     
     func uploadImage(image: UIImage, url: URL) {
         var request = URLRequest(url: url)
@@ -48,16 +48,20 @@ class RemoveBackgroundViewModel {
         }
         task.resume()
         
-        // Add observer to the task's progress
-        task.progress.addObserver(self as! NSObject, forKeyPath: "fractionCompleted", options: [.new], context: nil)
-    }
-    
-    // MARK: - KVO Handling
-    func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "fractionCompleted", let progress = object as? Progress {
-            DispatchQueue.main.async {
-                self.uploadProgress = Float(progress.fractionCompleted)
+        // Use Combine to observe the task's progress
+        task.progress.fractionCompletedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] progress in
+                self?.uploadProgress = Float(progress)
             }
-        }
+            .store(in: &cancellables)
+    }
+}
+
+
+extension Progress {
+    var fractionCompletedPublisher: AnyPublisher<Double, Never> {
+        publisher(for: \.fractionCompleted)
+            .eraseToAnyPublisher()
     }
 }
