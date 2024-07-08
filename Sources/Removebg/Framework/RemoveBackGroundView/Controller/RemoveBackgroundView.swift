@@ -23,9 +23,6 @@ class RemoveBackgroundView: UIView {
     private var viewModel: RemoveBackgroundViewModel
     weak var uploadDelegate: UploadProgressDelegate?
     
-    
-    
-    
     // MARK: - Initializers -
     init(frame: CGRect, viewModel: RemoveBackgroundViewModel) {
         self.viewModel = viewModel
@@ -75,9 +72,14 @@ class RemoveBackgroundView: UIView {
         viewModel.$selectedImage
             .receive(on: RunLoop.main)
             .sink { [weak self] image in
-                self?.imageView.image = image
-                self?.deleteImage.isHidden = image == nil
-                self?.removeBackGroundView.isUserInteractionEnabled = image != nil
+                if let image = image {
+                    self?.imageView.image = image
+                    self?.deleteImage.isHidden = false
+                    self?.removeBackGroundView.isUserInteractionEnabled = true
+                } else {
+                    self?.deleteImage.isHidden = true
+                    self?.removeBackGroundView.isUserInteractionEnabled = false
+                }
             }
             .store(in: &cancellables)
         
@@ -159,10 +161,10 @@ class RemoveBackgroundView: UIView {
 extension RemoveBackgroundView: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-            picker.dismiss(animated: true) {
-                if let image = info[.originalImage] as? UIImage {
-                    self.viewModel.selectedImage = image
-                }
+        picker.dismiss(animated: true) {
+            if let image = info[.originalImage] as? UIImage {
+                self.viewModel.selectedImage = image
             }
         }
+    }
 }
