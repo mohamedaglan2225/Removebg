@@ -19,9 +19,9 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "Removebg",
-            resources: [.copy("Framework/View/RemoveBackgroundView.xib"),
-                        .copy("Framework/View/ImageResultView.xib"),
-                        .copy("Framework/View/LoaderView.xib"),
+            resources: [.copy("Framework/RemoveBackGroundView/View/RemoveBackgroundView.xib"),
+                        .copy("Framework/ImageResultView/View/ImageResultView.xib"),
+                        .copy("Framework/LoaderView/View/LoaderView.xib"),
                         .process("Assets/Loader.gif")
         ]),
         .testTarget(
