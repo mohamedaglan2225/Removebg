@@ -94,7 +94,7 @@ class ImageResultView: UIViewController {
     
     
     @IBAction func retryProcessButton(_ sender: UIButton) {
-        
+        dismiss(animated: true)
     }
     
     @IBAction func dismissButton(_ sender: Any) {

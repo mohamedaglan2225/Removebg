@@ -64,6 +64,7 @@ class RemoveBackgroundView: UIView {
         
         let removeBackGroundTap = UITapGestureRecognizer(target: self, action: #selector(removeBackgroundAction))
         removeBackGroundView.addGestureRecognizer(removeBackGroundTap)
+        removeBackGroundView.layer.cornerRadius = 8
         
         deleteImage.isHidden = true
     }
@@ -133,7 +134,6 @@ class RemoveBackgroundView: UIView {
     
     @objc private func removeBackgroundAction() {
         guard let image = imageView.image?.fixedOrientation(), let url = URL(string: "https://removebg.gyoom.sa") else { return }
-        //        viewModel.uploadImage(image: image, url: url)
         if let parentVC = self.parentViewController {
             let loaderViewModel = LoaderViewModel()
             let loaderView = LoaderView(viewModel: loaderViewModel)

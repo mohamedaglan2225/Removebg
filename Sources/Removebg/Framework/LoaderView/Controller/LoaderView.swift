@@ -16,6 +16,7 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
     
     
     //MARK: - IBOutLets -
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var loaderImage: UIImageView!
     @IBOutlet weak var loaderPercentage: UILabel!
     @IBOutlet weak var loaderProgressBar: UIProgressView!
@@ -32,9 +33,7 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
     // MARK: - LifeCycle Events -
     public override func viewDidLoad() {
         super.viewDidLoad()
-        loader.loadGIF(imageView: loaderImage, resourceName: "Loader")
-        loaderProgressBar.progress = 0.0
-        loaderPercentage.text = "0%"
+        configureInitialUI()
         bindViewModel()
     }
     
@@ -63,6 +62,14 @@ public class LoaderView: UIViewController, UploadProgressDelegate {
                 self?.loaderPercentage.text = text
             }
             .store(in: &cancellables)
+    }
+    
+    
+    private func configureInitialUI() {
+        loader.loadGIF(imageView: loaderImage, resourceName: "Loader")
+        loaderProgressBar.progress = 0.0
+        loaderPercentage.text = "0%"
+        containerView.layer.cornerRadius = 8
     }
     
     // MARK: - UploadProgressDelegate -
