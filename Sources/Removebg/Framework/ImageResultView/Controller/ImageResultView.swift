@@ -1,6 +1,6 @@
 //
 //  ImageResultView.swift
-//  
+//
 //
 //  Created by Mohamed Aglan on 6/8/24.
 //
@@ -26,7 +26,7 @@ class ImageResultView: UIViewController {
     //MARK: - LifeCycle Events -
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        imageView.image = imageResult
+        imageView.image = imageResult
     }
     
     
@@ -38,8 +38,8 @@ class ImageResultView: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-
-
+    
+    
     //MARK: - Configure UI -
     
     
@@ -52,5 +52,5 @@ class ImageResultView: UIViewController {
     
     
     
-
+    
 }
