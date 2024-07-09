@@ -24,11 +24,24 @@ class ImageResultView: UIViewController {
     
     
     //MARK: - LifeCycle Events -
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDidLoad called")
-        imageView.image = imageResult
-        print("imageView set")
+        if let imageView = imageView {
+            imageView.image = imageResult
+            print("imageView set")
+        } else {
+            print("imageView is nil")
+        }
     }
     
     
