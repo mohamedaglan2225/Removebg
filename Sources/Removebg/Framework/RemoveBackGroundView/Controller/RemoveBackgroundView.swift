@@ -147,10 +147,19 @@ class RemoveBackgroundView: UIView {
     
     private func presentImageResultView(with image: UIImage) {
         guard let parentVC = parentViewController else { return }
-        let vc = ImageResultView()
-        vc.loadViewIfNeeded()
+        let vc = ImageResultView(nibName: "ImageResultView", bundle: nil)
         vc.imageResult = image
-        parentVC.present(vc, animated: true)
+        
+        // Ensure no other view controllers are being presented
+        if parentVC.presentedViewController == nil {
+            parentVC.present(vc, animated: true)
+        } else {
+            parentVC.presentedViewController?.dismiss(animated: true) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    parentVC.present(vc, animated: true)
+                }
+            }
+        }
     }
     
     private func dismissLoaderView() {
