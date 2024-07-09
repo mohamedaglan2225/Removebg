@@ -56,17 +56,22 @@ class ImageResultView: UIViewController {
     }
     
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        if let error = error {
-            // Handle error
-            print("Error saving image: \(error.localizedDescription)")
-        } else {
-            // Success message
-            print("Image saved successfully")
-            let alert = UIAlertController(title: "Success", message: "Image saved to Photos", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            present(alert, animated: true)
+        DispatchQueue.main.async {
+            if let error = error {
+                // Handle error
+                print("Error saving image: \(error.localizedDescription)")
+            } else {
+                // Success message
+                print("Image saved successfully")
+                if self.presentedViewController == nil {
+                    let alert = UIAlertController(title: "Success", message: "Image saved to Photos", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(alert, animated: true)
+                }
+            }
         }
     }
+    
     
     
     //MARK: - IBActions -
