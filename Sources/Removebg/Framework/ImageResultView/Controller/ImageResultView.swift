@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import Photos
+
 
 class ImageResultView: UIViewController {
+    
     
     //MARK: - IBOutLets -
     @IBOutlet weak var imageView: UIImageView!
@@ -41,16 +44,45 @@ class ImageResultView: UIViewController {
     
     
     //MARK: - Configure UI -
+    func saveImageToPhotos(image: UIImage) {
+        PHPhotoLibrary.requestAuthorization { status in
+            if status == .authorized {
+                UIImageWriteToSavedPhotosAlbum(image, self, #selector(self.image(_:didFinishSavingWithError:contextInfo:)), nil)
+            } else {
+                // Handle unauthorized status
+                print("Photo library access is not authorized")
+            }
+        }
+    }
     
-    
-    
-    
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            // Handle error
+            print("Error saving image: \(error.localizedDescription)")
+        } else {
+            // Success message
+            print("Image saved successfully")
+            let alert = UIAlertController(title: "Success", message: "Image saved to Photos", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+        }
+    }
     
     
     //MARK: - IBActions -
+    @IBAction func saveButton(_ sender: UIButton) {
+        guard let image = imageResult else { return }
+        saveImageToPhotos(image: image)
+    }
     
     
+    @IBAction func retryProcessButton(_ sender: UIButton) {
+        
+    }
     
+    @IBAction func dismissButton(_ sender: Any) {
+        dismiss(animated: true)
+    }
     
     
 }

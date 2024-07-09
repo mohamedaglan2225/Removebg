@@ -31,6 +31,9 @@
                     <rect key="frame" x="16" y="58" width="34" height="34"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     <state key="normal" image="Arrow - Right"/>
+                    <connections>
+                        <action selector="dismissButton:" destination="-1" eventType="touchUpInside" id="6cy-HG-pU4"/>
+                    </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DYt-3t-Fox">
                     <rect key="frame" x="0.0" y="109.5" width="414" height="0.5"/>
@@ -42,7 +45,7 @@
                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="64Q-nf-jQx">
                     <rect key="frame" x="24" y="798" width="366" height="48"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y2E-Nk-gLG">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y2E-Nk-gLG" customClass="CustomButtonBorder" customModule="Removebg">
                             <rect key="frame" x="0.0" y="0.0" width="171" height="48"/>
                             <color key="backgroundColor" name="MainColor"/>
                             <constraints>
@@ -50,12 +53,18 @@
                             </constraints>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Save"/>
+                            <connections>
+                                <action selector="saveButton:" destination="-1" eventType="touchUpInside" id="68U-nx-85H"/>
+                            </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nVn-oE-0E0">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nVn-oE-0E0" customClass="CustomButtonBorder" customModule="Removebg">
                             <rect key="frame" x="195" y="0.0" width="171" height="48"/>
                             <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Retry the process"/>
+                            <connections>
+                                <action selector="retryProcessButton:" destination="-1" eventType="touchUpInside" id="9o6-Gh-bX6"/>
+                            </connections>
                         </button>
                     </subviews>
                 </stackView>
