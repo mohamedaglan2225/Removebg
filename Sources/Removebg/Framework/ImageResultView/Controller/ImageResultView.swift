@@ -26,7 +26,9 @@ class ImageResultView: UIViewController {
     //MARK: - LifeCycle Events -
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("viewDidLoad called")
         imageView.image = imageResult
+        print("imageView set")
     }
     
     
